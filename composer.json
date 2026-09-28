@@ -1,0 +1,10 @@
+{
+    "name": "sodeker/doma-frontend",
+    "description": "Componentes Vue, estilos y tokens de diseño compartidos por Suite y las aplicaciones hijas de Sódeker.",
+    "type": "library",
+    "license": "proprietary",
+    "keywords": ["sodeker", "vue", "design-system"],
+    "config": {
+        "sort-packages": true
+    }
+}

@@ -1,0 +1,7 @@
+/*
+ * Tokens del rediseño (color, tipografía, espaciado, radios, sombras) como
+ * variables CSS. Prefijo --doma- para no chocar con Bootstrap (--bs-) ni con
+ * PrimeVue (--p-), que siguen activos en las apps durante la migración.
+ */
+:root {
+}

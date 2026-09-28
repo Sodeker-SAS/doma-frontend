@@ -1,0 +1,8 @@
+/*
+ * Estilos globales de doma-frontend. Cada app los importa una sola vez, en su app.js:
+ *
+ *     import '@doma/styles/doma.css';
+ *
+ * Los estilos de cada componente van en su propio <style scoped>, no aquí.
+ */
+@import './tokens.css';
