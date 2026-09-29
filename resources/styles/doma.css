@@ -6,3 +6,4 @@
  * Los estilos de cada componente van en su propio <style scoped>, no aquí.
  */
 @import './tokens.css';
+@import './tooltip.css';

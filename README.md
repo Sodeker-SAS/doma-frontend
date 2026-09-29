@@ -12,6 +12,7 @@ resources/
 ├── index.js          punto de entrada público: import { … } from '@doma'
 ├── components/       componentes Vue (SFC con <script setup>)
 ├── composables/      lógica reutilizable (useAlgo)
+├── utils/            funciones sin estado (moduleColor)
 └── styles/
     ├── doma.css      estilos globales; la app lo importa una sola vez
     └── tokens.css    variables CSS --doma-* (color, tipografía, espaciado…)
@@ -29,6 +30,89 @@ import '@doma/styles/doma.css';
 import { DomaButton } from '@doma';
 import DomaButton from '@doma/components/DomaButton.vue';
 ```
+
+## Componentes
+
+### `DomaNavBar`
+
+Barra de navegación superior, la misma en Suite y en cada app hija. No conoce el router ni
+la sesión de la app: recibe los datos por props y avisa las acciones por eventos.
+
+```vue
+<DomaNavBar
+    :modules="modules"            <!-- lanzador: [{ slug, name, icon, url, accessible, color? }], ya ordenados -->
+    current-module="sat"          <!-- se resalta en el lanzador -->
+    :home-url="homeUrl"           <!-- "Inicio" del lanzador (hub de Suite) -->
+    :config-url="configUrl"       <!-- "Configuración": botón en la barra y en el lanzador -->
+    :config-active="false"        <!-- resalta ese botón cuando se está en la configuración -->
+    :tenant="{ id, name, caption }"
+    :tenants="empresas"           <!-- [{ id, name, caption? }]: con más de una aparece el selector -->
+    :tenant-switchable="true"     <!-- p. ej. solo en vistas de listado -->
+    :user="{ name, caption, email, avatarUrl }"
+    :logoutable="true"
+    :menu-toggle="true"           <!-- botón del menú lateral, solo en pantallas angostas -->
+    :brand="true"                 <!-- marca DOMA + lanzador al inicio, antes de la línea separadora -->
+    :theme="null"                 <!-- 'light' | 'dark' muestra el botón de tema -->
+    @select-tenant="(empresa) => …"
+    @logout="…"
+    @toggle-menu="…"
+    @toggle-theme="…"
+>
+    <template #user-menu="{ close }">
+        <!-- ítems extra del menú del usuario; usar la clase doma-navbar__menu-item -->
+    </template>
+</DomaNavBar>
+```
+
+Slots: `start` (junto al selector de empresa), `actions` (antes del usuario) y `user-menu`.
+Los íconos son de Remix Icon (`ri-*`), que carga cada app. El color de cada módulo sale de
+`moduleColor(slug)` si no se pasa `color`.
+
+El lanzador pinta los productos en el orden en que llegan: el orden lo decide la app y debe ser
+el mismo del hub de productos (en Suite, `ProductOrderService`). La empresa se muestra siempre
+con dos letras (sin logo) y, si trae `caption`, con ese dato bajo el nombre, p. ej. su NIT.
+
+La barra ocupa siempre todo el ancho de la pantalla, fija arriba; el menú lateral de la app va
+debajo de ella. El bloque de marca y lanzador mide `--doma-navbar-brand-width` (por defecto el
+ancho del menú lateral de Velzon) para que la línea separadora caiga sobre el borde del menú.
+
+En Suite va dentro de `#page-topbar` (`resources/js/Components/SuiteNavBar.vue`).
+
+### `DomaMenuHeader`
+
+Encabezado del menú lateral: dónde está parado el usuario, sobre fondo gris. En Suite es
+"Configuración"; en cada app hija será su producto. Con el menú colapsado solo queda el ícono.
+
+```vue
+<DomaMenuHeader
+    title="Configuración"
+    description="Ajustes transversales en DOMA"
+    icon="ri-settings-3-line"
+    :collapsed="menuColapsado"
+/>
+```
+
+### Tooltip
+
+`styles/tooltip.css` (incluido en `doma.css`): cualquier elemento con
+`data-doma-tooltip="Texto"` muestra un tooltip debajo al pasar el mouse o al enfocarlo con el
+teclado. No usa JavaScript ni PrimeVue (no todas las apps lo tienen); el fondo es el color
+primario de la app y el texto blanco. Va en lugar del `title` del navegador.
+
+El mismo archivo le da ese aspecto al tooltip de PrimeVue (`v-tooltip`) en las apps que lo usan,
+así todos los tooltips de DOMA se ven iguales. La app no debe pintar `.p-tooltip-text` por su
+cuenta; los colores salen de `--doma-tooltip-bg` y `--doma-tooltip-text`.
+
+### Utilidades
+
+- `moduleColor(slug)`: color de identidad de cada módulo; el mismo en todas las apps.
+- `useDismiss(ancla, cerrar)`: cierra un menú al hacer clic fuera o presionar Escape.
+
+### Tokens
+
+`styles/tokens.css` define las variables `--doma-*`. Por ahora cada una toma el valor del tema
+de la app (`--vz-*` de Velzon) con un respaldo fijo, así el paquete respeta los colores y el
+modo oscuro de cada app. Cuando los colores se dinamicen, se cambia ese archivo.
 
 ## Probar sin publicar
 
