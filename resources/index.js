@@ -5,6 +5,7 @@
  *     import { DomaNavBar } from '@doma';
  */
 export { default as DomaNavBar } from './components/DomaNavBar.vue';
+export { default as DomaMenuHeader } from './components/DomaMenuHeader.vue';
 
 export { useDismiss } from './composables/useDismiss.js';
 
