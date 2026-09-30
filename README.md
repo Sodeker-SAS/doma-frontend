@@ -251,7 +251,7 @@ Si no aparece la línea, se está usando `vendor/` (o el paquete no está en nin
    ```
 
    ```bash
-   docker compose exec php composer require sodeker/doma-frontend:^0.1
+   docker compose exec php composer require sodeker/doma-frontend:^0.2
    ```
 
 3. Para probar en local la versión publicada en lugar de la carpeta de trabajo, definir
