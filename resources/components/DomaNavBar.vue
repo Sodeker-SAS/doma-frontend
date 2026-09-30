@@ -401,7 +401,7 @@ function logout() {
     height: 30px;
     border-radius: var(--doma-radius);
     background: var(--doma-primary);
-    color: #fff;
+    color: var(--doma-on-primary);
     font-size: 14px;
     font-weight: 600;
 }
@@ -555,7 +555,7 @@ function logout() {
     height: 34px;
     border-radius: 50%;
     background: var(--doma-primary);
-    color: #fff;
+    color: var(--doma-on-primary);
 }
 
 .doma-navbar__divider {
@@ -695,7 +695,7 @@ function logout() {
 }
 
 .doma-navbar__module {
-    --module-ink: color-mix(in srgb, var(--module) 80%, #000);
+    --module-ink: color-mix(in srgb, var(--module) 80%, var(--vz-black, #000));
 
     position: relative;
     display: flex;
@@ -797,7 +797,7 @@ a.doma-navbar__module:hover {
 }
 
 [data-bs-theme="dark"] .doma-navbar__module {
-    --module-ink: color-mix(in srgb, var(--module) 70%, #fff);
+    --module-ink: color-mix(in srgb, var(--module) 70%, var(--vz-white, #fff));
 }
 
 /* ---------- Pantallas angostas ---------- */

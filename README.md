@@ -97,7 +97,7 @@ Encabezado del menú lateral: dónde está parado el usuario, sobre fondo gris. 
 `styles/tooltip.css` (incluido en `doma.css`): cualquier elemento con
 `data-doma-tooltip="Texto"` muestra un tooltip debajo al pasar el mouse o al enfocarlo con el
 teclado. No usa JavaScript ni PrimeVue (no todas las apps lo tienen); el fondo es el color
-primario de la app y el texto blanco. Va en lugar del `title` del navegador.
+primario de la app y el texto, el blanco de su tema. Va en lugar del `title` del navegador.
 
 El mismo archivo le da ese aspecto al tooltip de PrimeVue (`v-tooltip`) en las apps que lo usan,
 así todos los tooltips de DOMA se ven iguales. La app no debe pintar `.p-tooltip-text` por su
@@ -110,9 +110,12 @@ cuenta; los colores salen de `--doma-tooltip-bg` y `--doma-tooltip-text`.
 
 ### Tokens
 
-`styles/tokens.css` define las variables `--doma-*`. Por ahora cada una toma el valor del tema
-de la app (`--vz-*` de Velzon) con un respaldo fijo, así el paquete respeta los colores y el
-modo oscuro de cada app. Cuando los colores se dinamicen, se cambia ese archivo.
+`styles/tokens.css` define las variables `--doma-*`. Cada una toma el valor del tema de la app
+(`--vz-*` de Velzon): su primario, su paleta y su modo oscuro. El valor de respaldo, el de
+Suite, solo aplica si la app no define la variable.
+
+**Ningún color va fijo en el paquete.** Todo color de un componente o de una hoja de estilos sale
+de un token `--doma-*` o de una variable `--vz-*` del tema, con el valor de Suite como respaldo.
 
 ## Probar sin publicar
 
