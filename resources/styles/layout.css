@@ -1,0 +1,303 @@
+/*
+ * Layout DOMA sobre la plantilla Velzon, el mismo en Suite y en cada app hija:
+ * la barra superior (DomaNavBar) a todo el ancho y el menú lateral debajo de
+ * ella, que se colapsa y expande solo con click (sin hover).
+ *
+ * Aplica cuando <html> tiene el atributo `data-doma-layout`. La app lo pone
+ * antes de montar Vue (en su app.blade.php, para que el menú no salte al
+ * cargar) y lo quita su layout vertical al desmontarse.
+ *
+ * Marcado que espera de la app:
+ *   - la barra, dentro de      <header id="page-topbar">
+ *   - el menú lateral:         <div class="app-menu navbar-menu doma-app-menu">
+ *   - el botón de colapsar:    <button class="doma-sidebar-toggle">
+ *
+ * Todo va plano: sin sombras y sin línea bajo la barra. Lo único que separa el
+ * menú del contenido es su borde derecho. Los colores son los del tema de cada
+ * app (--vz-*); aquí no hay ninguno fijo.
+ */
+
+/* ---------- Barra superior ---------- */
+
+/* A todo el ancho, fija arriba y por encima del menú lateral, que empieza
+   debajo de ella. 1023 le gana al botón de colapsar (1022) para que los menús
+   desplegables de la barra queden encima. */
+[data-doma-layout] #page-topbar {
+    left: 0 !important;
+    z-index: 1023;
+    border-bottom: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+/* ---------- Título de página ---------- */
+
+/* Plano, como la barra: solo la línea inferior, sin sombra. */
+[data-doma-layout] .page-title-box {
+    border-bottom: 1px solid var(--doma-border);
+    box-shadow: none;
+}
+
+/* ---------- Contenido ---------- */
+
+/* Sin footer: el contenido ya no reserva su alto abajo. `html` sube la
+   especificidad sobre las reglas de Velzon que lo reservan en cada tamaño de
+   menú. */
+html[data-doma-layout] .page-content {
+    padding-bottom: 1.5rem;
+}
+
+/* ---------- Menú lateral ---------- */
+
+[data-doma-layout] .navbar-menu.doma-app-menu {
+    top: var(--doma-navbar-height);
+    border-right: none;
+    box-shadow: none;
+}
+
+/* Encabezado del menú (DomaMenuHeader): fijo arriba, fuera del scroll. */
+[data-doma-layout] .doma-app-menu > .doma-menu-header {
+    flex: 0 0 auto;
+}
+
+/* Borde derecho continuo, por encima del botón de colapsar y sin que el ícono
+   lo corte. */
+[data-doma-layout] .navbar-menu.doma-app-menu::before {
+    content: '';
+    position: fixed;
+    top: var(--doma-navbar-height);
+    bottom: 0;
+    left: calc(var(--vz-vertical-menu-width) - 1px);
+    z-index: 1021;
+    width: 1px;
+    background-color: var(--vz-vertical-menu-border, var(--doma-border));
+    pointer-events: none;
+    transition: left 0.1s ease-out;
+}
+
+[data-doma-layout][data-sidebar-size="sm"] .navbar-menu.doma-app-menu::before {
+    left: calc(var(--vz-vertical-menu-width-sm) - 1px);
+}
+
+[data-doma-layout][data-sidebar-size="md"] .navbar-menu.doma-app-menu::before {
+    left: calc(var(--vz-vertical-menu-width-md) - 1px);
+}
+
+/* Fijo a la ventana: el encabezado arriba y el scroll solo dentro del menú si
+   no cabe en el alto visible. */
+@media (min-width: 768px) {
+    [data-doma-layout] .topnav-hamburger {
+        display: none !important;
+    }
+
+    [data-doma-layout] .navbar-menu.doma-app-menu {
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        height: calc(100vh - var(--doma-navbar-height));
+        max-height: calc(100vh - var(--doma-navbar-height));
+        padding-bottom: 0 !important;
+    }
+
+    [data-doma-layout] .navbar-menu.doma-app-menu .navbar-brand-box {
+        flex: 0 0 auto;
+    }
+
+    [data-doma-layout] .navbar-menu.doma-app-menu #scrollbar {
+        flex: 1 1 auto;
+        min-height: 0;
+        height: auto !important;
+    }
+
+    [data-doma-layout] .navbar-menu.doma-app-menu #scrollbar .simplebar-wrapper,
+    [data-doma-layout] .navbar-menu.doma-app-menu #scrollbar .simplebar-mask {
+        height: 100% !important;
+    }
+
+    [data-doma-layout] .navbar-menu.doma-app-menu #scrollbar .simplebar-mask,
+    [data-doma-layout] .navbar-menu.doma-app-menu #scrollbar .simplebar-content-wrapper {
+        overflow: hidden auto !important;
+    }
+
+    /* Alto mínimo de la ventana (reboot: html min-height 100%), sin el truco
+       de 1400px de la plantilla. */
+    [data-doma-layout][data-sidebar-size="sm"] {
+        min-height: 100% !important;
+    }
+
+    [data-doma-layout][data-sidebar-size="sm"] .navbar-menu.doma-app-menu {
+        position: fixed !important;
+        top: var(--doma-navbar-height) !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        padding-top: 0 !important;
+    }
+
+    [data-doma-layout][data-sidebar-size="sm"] .navbar-menu.doma-app-menu .navbar-brand-box {
+        position: relative !important;
+        width: 100% !important;
+    }
+
+    [data-doma-layout][data-sidebar-size="sm"] .navbar-menu.doma-app-menu #scrollbar .simplebar-scrollbar {
+        display: initial !important;
+    }
+
+    [data-doma-layout][data-sidebar-size="sm"] .navbar-menu.doma-app-menu #scrollbar .simplebar-offset {
+        bottom: auto !important;
+    }
+}
+
+/* En celular el menú se superpone al contenido. */
+@media (max-width: 767.98px) {
+    [data-doma-layout] .doma-sidebar-toggle {
+        display: none !important;
+    }
+
+    /* Sin la línea-borde fija: quedaría una raya vertical suelta a la altura
+       del ancho del menú. */
+    [data-doma-layout] .navbar-menu.doma-app-menu::before {
+        display: none !important;
+    }
+
+    /* Abierto, también en columna como en escritorio: el encabezado arriba y
+       el scroll con el alto libre. */
+    [data-doma-layout] .vertical-sidebar-enable .navbar-menu.doma-app-menu {
+        display: flex;
+        flex-direction: column;
+        padding-bottom: 0 !important;
+    }
+
+    [data-doma-layout] .vertical-sidebar-enable .navbar-menu.doma-app-menu #scrollbar {
+        flex: 1 1 auto;
+        min-height: 0;
+        height: auto !important;
+    }
+
+    [data-doma-layout] .vertical-sidebar-enable .navbar-menu.doma-app-menu #scrollbar .simplebar-wrapper,
+    [data-doma-layout] .vertical-sidebar-enable .navbar-menu.doma-app-menu #scrollbar .simplebar-mask {
+        height: 100% !important;
+    }
+}
+
+/* ---------- Botón de colapsar ---------- */
+
+/* Círculo con el primario sobre el borde del menú. Solo tiene que ganarle al
+   menú (1002) y a su línea-borde (1021); por eso 1022 y no un valor de las
+   capas flotantes de Bootstrap (sticky 1020, fixed 1030, offcanvas 1040,
+   modal 1055): con esos quedaba encima de barras fijas y desplegables. */
+[data-doma-layout] .doma-sidebar-toggle {
+    position: fixed;
+    top: var(--doma-navbar-height);
+    left: var(--vz-vertical-menu-width);
+    z-index: 1022;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.25rem;
+    height: 1.25rem;
+    padding: 0;
+    overflow: visible;
+    border: none !important;
+    border-radius: 50%;
+    background-color: var(--doma-primary) !important;
+    color: var(--doma-on-primary) !important;
+    box-shadow: none !important;
+    line-height: 1;
+    cursor: pointer;
+    pointer-events: auto;
+    transform: translateX(-50%);
+    transition: left 0.1s ease-out;
+}
+
+/* Área de click más grande sin cambiar el tamaño del ícono. */
+[data-doma-layout] .doma-sidebar-toggle::before {
+    content: '';
+    position: absolute;
+    inset: -0.625rem;
+    border-radius: 50%;
+}
+
+[data-doma-layout] .doma-sidebar-toggle:hover,
+[data-doma-layout] .doma-sidebar-toggle:focus,
+[data-doma-layout] .doma-sidebar-toggle:active,
+[data-doma-layout] .doma-sidebar-toggle:focus-visible {
+    background-color: var(--doma-primary) !important;
+    color: var(--doma-on-primary) !important;
+    box-shadow: none !important;
+}
+
+[data-doma-layout] .doma-sidebar-toggle i {
+    display: block;
+    background: transparent;
+    color: var(--doma-on-primary) !important;
+    font-size: 1rem !important;
+    line-height: 1;
+    pointer-events: none;
+}
+
+[data-doma-layout][data-sidebar-size="sm"] .doma-sidebar-toggle {
+    left: var(--vz-vertical-menu-width-sm);
+}
+
+[data-doma-layout][data-sidebar-size="md"] .doma-sidebar-toggle {
+    left: var(--vz-vertical-menu-width-md);
+}
+
+/* El botón se retira mientras haya una capa flotante abierta. Está fijo sobre
+   el layout, así que solo lo tapa una capa que cubra toda la pantalla y tenga
+   más z-index. Un offcanvas sin fondo, o el panel lateral de la plantilla con
+   su fondo en 1004, no cumplen ambas cosas y el botón quedaba encima,
+   permitiendo colapsar el menú por detrás del panel. */
+[data-doma-layout]:has(.offcanvas.show) .doma-sidebar-toggle,
+[data-doma-layout]:has(.modal.show) .doma-sidebar-toggle {
+    display: none !important;
+}
+
+/* El panel lateral derecho de la plantilla solo se superpone por debajo de
+   1700px; por encima es una columna más y el botón debe seguir disponible. Es
+   el mismo corte que usa Velzon para volverlo fijo. */
+@media (max-width: 1699.98px) {
+    [data-doma-layout]:has(.layout-rightside-col.d-block) .doma-sidebar-toggle {
+        display: none !important;
+    }
+}
+
+/* ---------- Menú colapsado ---------- */
+
+/* Sin la expansión por hover del modo sm-hover de la plantilla. */
+[data-doma-layout][data-sidebar-size="sm-hover"] .navbar-menu:hover,
+[data-doma-layout][data-sidebar-size="sm-hover-active"] .navbar-menu:hover {
+    width: var(--vz-vertical-menu-width-sm) !important;
+}
+
+[data-doma-layout][data-sidebar-size="sm-hover"] .navbar-menu:hover .navbar-nav .nav-link span,
+[data-doma-layout][data-sidebar-size="sm-hover"] .navbar-menu:hover .navbar-nav .nav-link::after,
+[data-doma-layout][data-sidebar-size="sm-hover"] .navbar-menu:hover .navbar-nav .nav-link::before,
+[data-doma-layout][data-sidebar-size="sm-hover"] .navbar-menu:hover .navbar-nav .menu-dropdown.show,
+[data-doma-layout][data-sidebar-size="sm-hover"] .navbar-menu:hover .logo span.logo-lg,
+[data-doma-layout][data-sidebar-size="sm-hover"] .navbar-menu:hover .menu-title span,
+[data-doma-layout][data-sidebar-size="sm-hover-active"] .navbar-menu:hover .navbar-nav .nav-link span,
+[data-doma-layout][data-sidebar-size="sm-hover-active"] .navbar-menu:hover .navbar-nav .nav-link::after,
+[data-doma-layout][data-sidebar-size="sm-hover-active"] .navbar-menu:hover .navbar-nav .nav-link::before,
+[data-doma-layout][data-sidebar-size="sm-hover-active"] .navbar-menu:hover .navbar-nav .menu-dropdown.show,
+[data-doma-layout][data-sidebar-size="sm-hover-active"] .navbar-menu:hover .logo span.logo-lg,
+[data-doma-layout][data-sidebar-size="sm-hover-active"] .navbar-menu:hover .menu-title span {
+    display: none !important;
+}
+
+[data-doma-layout][data-sidebar-size="sm-hover"] .navbar-menu:hover .logo span.logo-sm,
+[data-doma-layout][data-sidebar-size="sm-hover-active"] .navbar-menu:hover .logo span.logo-sm {
+    display: inline-block !important;
+}
+
+/* Colapsado (sm): sin desplegables al pasar el mouse; se navega por íconos. */
+[data-doma-layout][data-sidebar-size="sm"] .navbar-menu .navbar-nav .nav-item:hover > a.menu-link {
+    width: auto !important;
+    background: transparent !important;
+}
+
+[data-doma-layout][data-sidebar-size="sm"] .navbar-menu .navbar-nav .nav-item:hover > a.menu-link span,
+[data-doma-layout][data-sidebar-size="sm"] .navbar-menu .navbar-nav .nav-item:hover > a.menu-link::after,
+[data-doma-layout][data-sidebar-size="sm"] .navbar-menu .navbar-nav .nav-item:hover > .menu-dropdown {
+    display: none !important;
+}

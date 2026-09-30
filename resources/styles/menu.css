@@ -1,0 +1,370 @@
+/*
+ * Ítems del menú lateral DOMA (dentro de `.doma-app-menu`, ver layout.css): el
+ * mismo aspecto en Suite y en cada app hija. Cada app solo arma su lista de
+ * módulos; tamaños, espacios y estados salen de aquí.
+ *
+ * Los colores son los del menú del tema de cada app (--vz-vertical-menu-*) y
+ * su primario: el ítem activo va en el primario sólido, con su texto.
+ */
+
+/* ---------- Contenedor ---------- */
+
+.doma-app-menu .navbar-nav {
+    padding: 4px 10px 20px;
+}
+
+.doma-app-menu .navbar-nav .nav-item {
+    position: relative;
+    margin: 1px;
+}
+
+/* ---------- Título de sección ---------- */
+
+.doma-app-menu .menu-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 6px;
+    padding: 6px 14px 0 0;
+    color: var(--vz-vertical-menu-title-color, var(--doma-muted));
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    list-style: none;
+    opacity: 0.85;
+}
+
+.doma-app-menu .menu-title span {
+    padding: 0 14px 10px 0.8px;
+    font-size: 11px;
+    opacity: 0.85;
+}
+
+/* ---------- Ítem de primer nivel ---------- */
+
+.doma-app-menu .navbar-nav .menu-link {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 10px;
+    border-radius: var(--doma-radius);
+    color: var(--vz-vertical-menu-item-color);
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+        color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+        transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.doma-app-menu .navbar-nav .menu-link i {
+    flex-shrink: 0;
+    width: 20px;
+    color: inherit;
+    font-size: 17px;
+    text-align: center;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.doma-app-menu .navbar-nav .menu-link:hover {
+    color: var(--vz-vertical-menu-item-hover-color);
+    transform: translateX(2px);
+}
+
+.doma-app-menu .navbar-nav .menu-link:hover i {
+    transform: scale(1.08);
+}
+
+.doma-app-menu .navbar-nav .menu-link[aria-expanded="true"] {
+    background-color: transparent;
+    color: var(--vz-vertical-menu-item-color);
+}
+
+.doma-app-menu .navbar-nav .menu-link.active {
+    font-weight: 500;
+}
+
+/* ---------- Sub-ítems ---------- */
+
+.doma-app-menu .menu-dropdown .nav-sm {
+    position: relative;
+    margin: 2px 0 4px 4px;
+    padding: 2px 0 4px 5px;
+    border-left: 1px dashed rgba(var(--doma-primary-rgb), 0.22);
+    list-style: none;
+}
+
+.doma-app-menu .menu-dropdown .nav-sm .nav-link {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin: 1px 0;
+    padding: 5px 10px;
+    border-radius: var(--doma-radius);
+    color: var(--vz-vertical-menu-sub-item-color);
+    font-size: 12.5px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+        color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+        transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.doma-app-menu .menu-dropdown .nav-sm .nav-link::before,
+.doma-app-menu .menu-dropdown .nav-sm .nav-link::after {
+    content: none !important;
+    display: none !important;
+    background: none !important;
+}
+
+.doma-app-menu .menu-dropdown .nav-sm .nav-link:hover {
+    background: rgba(var(--doma-primary-rgb), 0.07);
+    color: var(--vz-vertical-menu-sub-item-hover-color);
+    transform: translateX(2px);
+}
+
+.doma-app-menu .menu-dropdown .nav-sm .nav-link.active {
+    font-weight: 500;
+}
+
+.doma-app-menu .menu-dropdown .nav-sm .text-muted {
+    font-style: italic;
+    opacity: 0.6;
+}
+
+/* ---------- Estados en el menú claro ---------- */
+
+/* Texto del tema; el padre con sub-menú va sin fondo y con una barra del
+   primario si tiene un hijo activo; el ítem activo, primario sólido. */
+[data-doma-layout][data-sidebar="light"] #navbar-nav .menu-link {
+    color: var(--vz-vertical-menu-item-color);
+}
+
+[data-doma-layout][data-sidebar="light"] #navbar-nav .menu-link:hover {
+    background-color: rgba(var(--doma-primary-rgb), 0.07);
+    color: var(--vz-vertical-menu-item-hover-color) !important;
+}
+
+[data-doma-layout][data-sidebar="light"] #navbar-nav .menu-link[data-bs-toggle="collapse"] {
+    background-color: transparent !important;
+}
+
+[data-doma-layout][data-sidebar="light"] #navbar-nav .menu-link[data-bs-toggle="collapse"]::after,
+[data-doma-layout][data-sidebar="light"] #navbar-nav .menu-link[data-bs-toggle="collapse"].active::after {
+    color: var(--vz-vertical-menu-item-color) !important;
+}
+
+[data-doma-layout][data-sidebar="light"] #navbar-nav .menu-link[data-bs-toggle="collapse"][aria-expanded="true"] {
+    background-color: transparent !important;
+    color: var(--vz-vertical-menu-item-color) !important;
+}
+
+[data-doma-layout][data-sidebar="light"] #navbar-nav .menu-link[data-bs-toggle="collapse"][aria-expanded="true"]::before {
+    display: none !important;
+}
+
+[data-doma-layout][data-sidebar="light"] #navbar-nav .menu-link[data-bs-toggle="collapse"].active {
+    background-color: transparent !important;
+    color: var(--vz-vertical-menu-item-color) !important;
+}
+
+[data-doma-layout][data-sidebar="light"] #navbar-nav .menu-link[data-bs-toggle="collapse"].active::before {
+    content: '' !important;
+    position: absolute;
+    top: 50%;
+    left: -10px;
+    display: block !important;
+    width: 3px;
+    height: 16px;
+    border-radius: 0 3px 3px 0;
+    background-color: var(--doma-primary) !important;
+    opacity: 1 !important;
+    transform: translateY(-50%);
+}
+
+[data-doma-layout][data-sidebar="light"] #navbar-nav .menu-link.active:not([data-bs-toggle="collapse"]) {
+    background-color: var(--doma-primary) !important;
+    color: var(--doma-on-primary) !important;
+    font-weight: 500;
+}
+
+[data-doma-layout][data-sidebar="light"] #navbar-nav .menu-link.active:not([data-bs-toggle="collapse"])::before {
+    display: none !important;
+}
+
+[data-doma-layout][data-sidebar="light"] #navbar-nav .menu-link.active:not([data-bs-toggle="collapse"]) i {
+    color: var(--doma-on-primary);
+}
+
+[data-doma-layout][data-sidebar="light"] #navbar-nav .menu-dropdown .nav-sm .nav-link {
+    color: var(--vz-vertical-menu-sub-item-color);
+}
+
+[data-doma-layout][data-sidebar="light"] #navbar-nav .menu-dropdown .nav-sm .nav-link:hover {
+    background-color: rgba(var(--doma-primary-rgb), 0.07);
+    color: var(--vz-vertical-menu-sub-item-hover-color) !important;
+}
+
+[data-doma-layout][data-sidebar="light"] #navbar-nav .menu-dropdown .nav-sm .nav-link.active {
+    background-color: var(--doma-primary) !important;
+    color: var(--doma-on-primary) !important;
+    font-weight: 500;
+}
+
+/* ---------- Desplegable del menú colapsado ---------- */
+
+/*
+ * Con el menú colapsado, los sub-ítems de una opción se abren en un panel
+ * flotante junto a ella, con el mismo aspecto de los sub-ítems del menú. La app
+ * lo teletransporta a <body> y le fija posición y `max-height` según el espacio
+ * libre; aquí solo se prepara para que el título quede fijo y la lista haga
+ * scroll.
+ *
+ *   <div class="doma-menu-flyout">
+ *     <div class="doma-menu-flyout-title">Opción</div>
+ *     <ul class="doma-menu-flyout-list">
+ *       <li><a class="doma-menu-flyout-link">Sub-ítem</a></li>
+ */
+.doma-menu-flyout {
+    position: fixed;
+    z-index: 1100;
+    display: flex;
+    flex-direction: column;
+    min-width: 230px;
+    max-width: 360px;
+    padding: 6px;
+    border: 1px solid var(--doma-border);
+    border-radius: var(--doma-radius-lg);
+    background: var(--doma-surface);
+    box-shadow: var(--doma-shadow-menu);
+    animation: domaMenuFlyIn 0.12s ease-out;
+}
+
+@keyframes domaMenuFlyIn {
+    from {
+        opacity: 0;
+        transform: translateX(-4px);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+.doma-menu-flyout-title {
+    flex: 0 0 auto;
+    padding: 4px 10px 6px;
+    color: var(--vz-vertical-menu-title-color, var(--doma-muted));
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    opacity: 0.85;
+}
+
+/* `min-height: 0` deja encoger la lista dentro del flex para que aparezca su
+   scroll, y `overscroll-behavior` evita que al llegar al final el scroll pase
+   a la página (que cerraría el panel). El padding derecho separa los ítems de
+   la barra de scroll y absorbe el translateX(2px) del hover; `overflow-x`
+   evita que esos 2px pinten una barra horizontal. */
+.doma-menu-flyout-list {
+    flex: 1 1 auto;
+    min-height: 0;
+    margin: 0;
+    padding: 0 6px 0 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    list-style: none;
+    scrollbar-width: thin;
+}
+
+.doma-menu-flyout-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.doma-menu-flyout-list::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    background: rgba(var(--doma-primary-rgb), 0.25);
+}
+
+.doma-menu-flyout-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(var(--doma-primary-rgb), 0.4);
+}
+
+.doma-menu-flyout-link {
+    display: block;
+    margin: 1px 0;
+    padding: 6px 14px 6px 12px;
+    border-radius: var(--doma-radius);
+    color: var(--vz-vertical-menu-sub-item-color);
+    font-size: 12.5px;
+    font-weight: 500;
+    line-height: 1.35;
+    text-decoration: none;
+    white-space: normal;
+    transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
+}
+
+.doma-menu-flyout-link:hover {
+    background: rgba(var(--doma-primary-rgb), 0.07);
+    color: var(--vz-vertical-menu-sub-item-hover-color);
+    transform: translateX(2px);
+}
+
+.doma-menu-flyout-link.active {
+    background: var(--doma-primary);
+    color: var(--doma-on-primary);
+}
+
+/* ---------- Tooltip del menú colapsado ---------- */
+
+/*
+ * Nombre de un ítem sin sub-ítems con el menú colapsado, para las apps sin
+ * PrimeVue (las que lo tienen usan `v-tooltip`, que se ve igual; ver
+ * tooltip.css). La app lo teletransporta a <body> y le fija `top` y `left`
+ * junto al ítem: queda centrado en vertical, con la flecha hacia él.
+ */
+.doma-menu-tooltip {
+    position: fixed;
+    z-index: 1100;
+    padding: 4px 8px;
+    border-radius: var(--doma-radius);
+    background: var(--doma-tooltip-bg);
+    color: var(--doma-tooltip-text);
+    font-family: var(--doma-font);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.4;
+    white-space: nowrap;
+    pointer-events: none;
+    transform: translateY(-50%);
+    animation: domaMenuTooltipIn 0.12s ease-out;
+}
+
+.doma-menu-tooltip::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -4px;
+    width: 8px;
+    height: 8px;
+    border-radius: 1px;
+    background: var(--doma-tooltip-bg);
+    transform: translateY(-50%) rotate(45deg);
+}
+
+@keyframes domaMenuTooltipIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50%) translateX(-4px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(-50%);
+    }
+}

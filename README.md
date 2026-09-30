@@ -15,7 +15,10 @@ resources/
 ├── utils/            funciones sin estado (moduleColor)
 └── styles/
     ├── doma.css      estilos globales; la app lo importa una sola vez
-    └── tokens.css    variables CSS --doma-* (color, tipografía, espaciado…)
+    ├── tokens.css    variables CSS --doma-* (color, tipografía, espaciado…)
+    ├── tooltip.css   tooltip data-doma-tooltip y el de PrimeVue
+    ├── layout.css    barra a todo el ancho y menú lateral sobre la plantilla Velzon
+    └── menu.css      ítems del menú lateral, su panel flotante y su tooltip
 vite.js               plugin de Vite que conecta el paquete con la app
 package.json          solo declara peerDependencies; no se instala
 ```
@@ -102,6 +105,36 @@ primario de la app y el texto, el blanco de su tema. Va en lugar del `title` del
 El mismo archivo le da ese aspecto al tooltip de PrimeVue (`v-tooltip`) en las apps que lo usan,
 así todos los tooltips de DOMA se ven iguales. La app no debe pintar `.p-tooltip-text` por su
 cuenta; los colores salen de `--doma-tooltip-bg` y `--doma-tooltip-text`.
+
+### Layout y menú lateral
+
+`styles/layout.css` y `styles/menu.css` (incluidos en `doma.css`) le dan a la plantilla Velzon
+de cada app el layout del rediseño, el mismo en Suite y en todas las hijas:
+
+- La barra (`DomaNavBar`, dentro de `#page-topbar`) a todo el ancho y fija arriba, **plana**: sin
+  sombra y sin línea inferior. El título de página (`.page-title-box`) tampoco lleva sombra.
+- El menú lateral debajo de la barra, sin sombra: lo separa del contenido solo su borde derecho.
+  Se colapsa y expande solo con click (sin hover), con el botón redondo sobre su borde; colapsado,
+  las opciones con sub-ítems abren un panel flotante y las demás muestran un tooltip.
+- Ítems con los tamaños, espacios y estados del rediseño: el activo en el primario sólido y el
+  padre de un sub-ítem activo con una barra del primario. El radio es el del tema.
+- Sin footer: el contenido no reserva su alto abajo.
+
+Los colores salen del tema de cada app: su primario y las variables de su menú
+(`--vz-vertical-menu-*`), así el menú de cada una conserva su paleta.
+
+La app pone el marcado y su lógica (qué módulos lista, el tamaño guardado del menú, el panel
+flotante); el aspecto y la mecánica del layout vienen del paquete:
+
+| Marcado en la app | Para qué |
+|---|---|
+| `<html data-doma-layout>` | Activa el layout. Ponerlo antes de montar Vue (en `app.blade.php`, para que el menú no salte al cargar) y quitarlo al desmontar el layout vertical |
+| `<div class="app-menu navbar-menu doma-app-menu">` | El menú lateral; `DomaMenuHeader` va como primer hijo |
+| `<button class="doma-sidebar-toggle">` | Botón de colapsar el menú |
+| `.doma-menu-flyout`, `-title`, `-list`, `-link` | Panel flotante del menú colapsado, teletransportado a `<body>` |
+| `.doma-menu-tooltip` | Tooltip del menú colapsado, para las apps sin PrimeVue |
+
+La app ya no define estos estilos en su `custom.scss` ni en su `menu.vue`.
 
 ### Utilidades
 
