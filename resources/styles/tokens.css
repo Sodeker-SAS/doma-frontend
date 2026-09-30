@@ -20,6 +20,10 @@
     --doma-surface: var(--vz-secondary-bg, #fff);
     --doma-surface-muted: var(--vz-light, #f3f6f9);
     --doma-border: var(--vz-border-color, #e9ebec);
+    /* Líneas del layout: bajo la barra, el borde del menú lateral y el
+       separador de la marca. El borde del menú del tema de la app, para que
+       todas se vean iguales. */
+    --doma-layout-border: var(--vz-vertical-menu-border, var(--doma-border));
 
     --doma-heading: var(--vz-heading-color, #495057);
     --doma-text: var(--vz-body-color, #212529);

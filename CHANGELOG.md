@@ -16,11 +16,14 @@ necesita alguna acción manual.
   (`doma-menu-flyout`) y tooltip (`doma-menu-tooltip`) del menú colapsado. **Acción en la app:**
   quitar esos estilos de su `menu.vue` y de su `custom.scss`, y usar las clases `doma-menu-*`.
 - Token `--doma-on-primary`: texto sobre el primario, tomado del blanco del tema.
+- Token `--doma-layout-border`: color de las líneas del layout.
 
 ### Cambiado
 
-- La barra, el menú lateral y el título de página van planos: sin sombra y sin la línea bajo la
-  barra.
+- La barra, el menú lateral y el título de página van planos, sin sombra. La línea bajo la barra,
+  el borde del menú y el separador de la marca son la misma: `--doma-layout-border`, el borde del
+  menú del tema de la app. Se quita la línea de `#page-topbar` de la plantilla, que duplicaba la
+  de la barra.
 - Ningún color fijo en el paquete: el texto del tooltip y la sombra de los menús desplegables
   salen del tema de la app, con el valor de Suite como respaldo.
 - Radio del tema en los ítems del menú lateral y en su panel flotante.

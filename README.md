@@ -112,8 +112,9 @@ cuenta; los colores salen de `--doma-tooltip-bg` y `--doma-tooltip-text`.
 de cada app el layout del rediseño, el mismo en Suite y en todas las hijas:
 
 - La barra (`DomaNavBar`, dentro de `#page-topbar`) a todo el ancho y fija arriba, **plana**: sin
-  sombra y sin línea inferior. El título de página (`.page-title-box`) tampoco lleva sombra.
-- El menú lateral debajo de la barra, sin sombra: lo separa del contenido solo su borde derecho.
+  sombra, solo con su línea inferior. El título de página (`.page-title-box`) tampoco lleva sombra.
+- El menú lateral debajo de la barra, sin sombra: lo separa del contenido su borde derecho. Esa
+  línea y la de la barra son la misma, `--doma-layout-border` (el borde del menú del tema).
   Se colapsa y expande solo con click (sin hover), con el botón redondo sobre su borde; colapsado,
   las opciones con sub-ítems abren un panel flotante y las demás muestran un tooltip.
 - Ítems con los tamaños, espacios y estados del rediseño: el activo en el primario sólido y el

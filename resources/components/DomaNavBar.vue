@@ -333,6 +333,7 @@ function logout() {
     gap: 12px;
     height: var(--doma-navbar-height);
     padding: 0 20px;
+    border-bottom: 1px solid var(--doma-layout-border);
     background: var(--doma-surface);
     color: var(--doma-text);
     font-family: var(--doma-font);
@@ -377,7 +378,7 @@ function logout() {
     margin-left: -20px;
     margin-right: 6px;
     padding: 0 16px 0 20px;
-    border-right: 1px solid var(--doma-border);
+    border-right: 1px solid var(--doma-layout-border);
 }
 
 .doma-navbar__brand {

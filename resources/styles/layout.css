@@ -12,16 +12,17 @@
  *   - el menú lateral:         <div class="app-menu navbar-menu doma-app-menu">
  *   - el botón de colapsar:    <button class="doma-sidebar-toggle">
  *
- * Todo va plano: sin sombras y sin línea bajo la barra. Lo único que separa el
- * menú del contenido es su borde derecho. Los colores son los del tema de cada
- * app (--vz-*); aquí no hay ninguno fijo.
+ * Todo va plano, sin sombras: la barra y el menú se separan del contenido solo
+ * con una línea, la misma en los dos (--doma-layout-border). Los colores son
+ * los del tema de cada app (--vz-*); aquí no hay ninguno fijo.
  */
 
 /* ---------- Barra superior ---------- */
 
 /* A todo el ancho, fija arriba y por encima del menú lateral, que empieza
    debajo de ella. 1023 le gana al botón de colapsar (1022) para que los menús
-   desplegables de la barra queden encima. */
+   desplegables de la barra queden encima. La línea inferior la pone la barra
+   (DomaNavBar); la de la plantilla se quita para que no queden dos. */
 [data-doma-layout] #page-topbar {
     left: 0 !important;
     z-index: 1023;
@@ -70,7 +71,7 @@ html[data-doma-layout] .page-content {
     left: calc(var(--vz-vertical-menu-width) - 1px);
     z-index: 1021;
     width: 1px;
-    background-color: var(--vz-vertical-menu-border, var(--doma-border));
+    background-color: var(--doma-layout-border);
     pointer-events: none;
     transition: left 0.1s ease-out;
 }
