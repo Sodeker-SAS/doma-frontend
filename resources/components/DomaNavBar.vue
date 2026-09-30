@@ -333,9 +333,7 @@ function logout() {
     gap: 12px;
     height: var(--doma-navbar-height);
     padding: 0 20px;
-    border-bottom: 1px solid var(--doma-border);
     background: var(--doma-surface);
-    box-shadow: var(--doma-shadow);
     color: var(--doma-text);
     font-family: var(--doma-font);
     font-size: 14px;

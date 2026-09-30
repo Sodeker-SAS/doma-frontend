@@ -28,7 +28,6 @@
     --doma-tooltip-bg: var(--vz-primary, #25a0e2);
     --doma-tooltip-text: #fff;
 
-    --doma-shadow: var(--vz-box-shadow, 0 1px 2px rgba(56, 65, 74, 0.15));
     --doma-shadow-menu: 0 12px 32px -12px rgba(15, 23, 42, 0.25);
 
     --doma-radius: var(--vz-border-radius, 0.25rem);
