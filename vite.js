@@ -2,8 +2,9 @@
  * Plugin de Vite que conecta doma-frontend con la aplicación que lo consume.
  *
  * Trabaja sobre la copia del paquete desde la que se importa este archivo: la
- * carpeta viva ../doma-frontend en local o vendor/sodeker/doma-frontend cuando
- * lo instaló Composer. Cuál de las dos se usa lo decide el vite.config.js de la app.
+ * carpeta viva ../package-doma-frontend en local o vendor/sodeker/doma-frontend
+ * cuando lo instaló Composer. Cuál de las dos se usa lo decide el vite.config.js
+ * de la app.
  */
 import { readFileSync } from 'node:fs';
 import { dirname, relative, resolve } from 'node:path';
