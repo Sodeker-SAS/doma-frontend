@@ -10,3 +10,4 @@ export { default as DomaMenuHeader } from './components/DomaMenuHeader.vue';
 export { useDismiss } from './composables/useDismiss.js';
 
 export { moduleColor } from './utils/moduleColors.js';
+export { DOMA_LAYOUT_ATTR, holdDomaLayout, releaseDomaLayout } from './utils/domaLayout.js';

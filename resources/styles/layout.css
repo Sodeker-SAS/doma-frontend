@@ -5,7 +5,8 @@
  *
  * Aplica cuando <html> tiene el atributo `data-doma-layout`. La app lo pone
  * antes de montar Vue (en su app.blade.php, para que el menú no salte al
- * cargar) y lo quita su layout vertical al desmontarse.
+ * cargar) y su layout vertical lo mantiene con holdDomaLayout() y
+ * releaseDomaLayout() (utils/domaLayout.js).
  *
  * Marcado que espera de la app:
  *   - la barra, dentro de      <header id="page-topbar">
@@ -22,13 +23,16 @@
 /* A todo el ancho, fija arriba y por encima del menú lateral, que empieza
    debajo de ella. 1023 le gana al botón de colapsar (1022) para que los menús
    desplegables de la barra queden encima. La línea inferior la pone la barra
-   (DomaNavBar); la de la plantilla se quita para que no queden dos. */
+   (DomaNavBar); la de la plantilla se quita para que no queden dos. Sin la
+   transición de la plantilla, que la desplaza con el menú: aquí nunca se
+   mueve. */
 [data-doma-layout] #page-topbar {
     left: 0 !important;
     z-index: 1023;
     border-bottom: 0;
     background: transparent;
     box-shadow: none;
+    transition: none;
 }
 
 /* ---------- Título de página ---------- */
