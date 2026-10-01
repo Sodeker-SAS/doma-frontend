@@ -15,8 +15,13 @@ necesita alguna acción manual.
 - Ítems del menú lateral (`styles/menu.css`): tamaños, espacios y estados; panel flotante
   (`doma-menu-flyout`) y tooltip (`doma-menu-tooltip`) del menú colapsado. **Acción en la app:**
   quitar esos estilos de su `menu.vue` y de su `custom.scss`, y usar las clases `doma-menu-*`.
+  El tooltip de los ítems sin sub-ítems va con `doma-menu-tooltip` también en las apps con
+  PrimeVue, en lugar de `v-tooltip`.
 - Token `--doma-on-primary`: texto sobre el primario, tomado del blanco del tema.
 - Token `--doma-layout-border`: color de las líneas del layout.
+- `holdDomaLayout()`, `releaseDomaLayout()` y `DOMA_LAYOUT_ATTR`: mantienen el atributo del
+  layout mientras haya un layout DOMA montado. **Acción en la app:** llamarlos en el `created` y
+  el `unmounted` de su layout vertical, en vez de poner y quitar el atributo directamente.
 
 ### Cambiado
 
@@ -27,6 +32,24 @@ necesita alguna acción manual.
 - Ningún color fijo en el paquete: el texto del tooltip y la sombra de los menús desplegables
   salen del tema de la app, con el valor de Suite como respaldo.
 - Radio del tema en los ítems del menú lateral y en su panel flotante.
+- El botón del usuario (el que abre su menú y el cierre de sesión) ya no marca borde al pasar el
+  mouse.
+- Lanzador: muestra a lo sumo 3×3 productos, siempre del mismo tamaño; si hay más, aparece
+  "Ver más productos", que lleva al hub (`homeUrl`). Inicio y Configuración se reparten el ancho
+  del pie, una mitad cada uno, con una línea divisoria en medio.
+
+### Corregido
+
+- La barra ya no se desliza desde la derecha al cambiar de módulo: el atributo del layout se
+  quitaba un instante entre el layout que salía y el que entraba.
+- Lo de la derecha de la barra ya no salta cuando la página gana o pierde la barra de scroll
+  (al cambiar de módulo o al abrir un modal): la barra mide siempre el ancho de la ventana
+  (`100vw`) y la barra de scroll se pinta encima de su borde derecho. El contenido conserva todo
+  su ancho.
+
+- El tooltip del menú colapsado ya no parpadea ni desaparece al pasar de una opción con
+  sub-ítems a una sin ellos (pasaba en las apps que usaban el `v-tooltip` de PrimeVue: al
+  cerrarse el panel flotante el menú se repinta y la directiva borraba el tooltip).
 
 ### Eliminado
 

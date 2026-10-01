@@ -323,10 +323,12 @@
 /* ---------- Tooltip del menú colapsado ---------- */
 
 /*
- * Nombre de un ítem sin sub-ítems con el menú colapsado, para las apps sin
- * PrimeVue (las que lo tienen usan `v-tooltip`, que se ve igual; ver
- * tooltip.css). La app lo teletransporta a <body> y le fija `top` y `left`
- * junto al ítem: queda centrado en vertical, con la flecha hacia él.
+ * Nombre de un ítem sin sub-ítems con el menú colapsado, con el mismo aspecto
+ * de los demás tooltips de DOMA. La app lo teletransporta a <body> y le fija
+ * `top` y `left` junto al ítem: queda centrado en vertical, con la flecha
+ * hacia él. Se usa en todas las apps, también en las que tienen PrimeVue: su
+ * `v-tooltip` borra el tooltip visible cada vez que el menú se repinta (por
+ * ejemplo, al cerrarse el panel flotante) y el tooltip parpadea.
  */
 .doma-menu-tooltip {
     position: fixed;

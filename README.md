@@ -12,7 +12,7 @@ resources/
 ├── index.js          punto de entrada público: import { … } from '@doma'
 ├── components/       componentes Vue (SFC con <script setup>)
 ├── composables/      lógica reutilizable (useAlgo)
-├── utils/            funciones sin estado (moduleColor)
+├── utils/            funciones sueltas (moduleColor, holdDomaLayout)
 └── styles/
     ├── doma.css      estilos globales; la app lo importa una sola vez
     ├── tokens.css    variables CSS --doma-* (color, tipografía, espaciado…)
@@ -72,8 +72,10 @@ Los íconos son de Remix Icon (`ri-*`), que carga cada app. El color de cada mó
 `moduleColor(slug)` si no se pasa `color`.
 
 El lanzador pinta los productos en el orden en que llegan: el orden lo decide la app y debe ser
-el mismo del hub de productos (en Suite, `ProductOrderService`). La empresa se muestra siempre
-con dos letras (sin logo) y, si trae `caption`, con ese dato bajo el nombre, p. ej. su NIT.
+el mismo del hub de productos (en Suite, `ProductOrderService`). Muestra a lo sumo 3×3, siempre
+del mismo tamaño; si llegan más, los primeros nueve y "Ver más productos", que lleva a `homeUrl`
+(el hub, donde están todos). La empresa se muestra siempre con dos letras (sin logo) y, si trae
+`caption`, con ese dato bajo el nombre, p. ej. su NIT.
 
 La barra ocupa siempre todo el ancho de la pantalla, fija arriba; el menú lateral de la app va
 debajo de ella. El bloque de marca y lanzador mide `--doma-navbar-brand-width` (por defecto el
@@ -112,7 +114,9 @@ cuenta; los colores salen de `--doma-tooltip-bg` y `--doma-tooltip-text`.
 de cada app el layout del rediseño, el mismo en Suite y en todas las hijas:
 
 - La barra (`DomaNavBar`, dentro de `#page-topbar`) a todo el ancho y fija arriba, **plana**: sin
-  sombra, solo con su línea inferior. El título de página (`.page-title-box`) tampoco lleva sombra.
+  sombra, solo con su línea inferior. Nunca se mueve: ni al cambiar de módulo ni cuando la
+  página gana o pierde la barra de scroll, porque mide siempre el ancho de la ventana (`100vw`).
+  El título de página (`.page-title-box`) tampoco lleva sombra.
 - El menú lateral debajo de la barra, sin sombra: lo separa del contenido su borde derecho. Esa
   línea y la de la barra son la misma, `--doma-layout-border` (el borde del menú del tema).
   Se colapsa y expande solo con click (sin hover), con el botón redondo sobre su borde; colapsado,
@@ -129,11 +133,11 @@ flotante); el aspecto y la mecánica del layout vienen del paquete:
 
 | Marcado en la app | Para qué |
 |---|---|
-| `<html data-doma-layout>` | Activa el layout. Ponerlo antes de montar Vue (en `app.blade.php`, para que el menú no salte al cargar) y quitarlo al desmontar el layout vertical |
+| `<html data-doma-layout>` | Activa el layout. Ponerlo antes de montar Vue (en `app.blade.php`, para que el menú no salte al cargar) y mantenerlo desde el layout vertical: `holdDomaLayout()` al crearlo y `releaseDomaLayout()` al desmontarlo, nunca con `setAttribute`/`removeAttribute` directos |
 | `<div class="app-menu navbar-menu doma-app-menu">` | El menú lateral; `DomaMenuHeader` va como primer hijo |
 | `<button class="doma-sidebar-toggle">` | Botón de colapsar el menú |
 | `.doma-menu-flyout`, `-title`, `-list`, `-link` | Panel flotante del menú colapsado, teletransportado a `<body>` |
-| `.doma-menu-tooltip` | Tooltip del menú colapsado, para las apps sin PrimeVue |
+| `.doma-menu-tooltip` | Tooltip del menú colapsado, teletransportado a `<body>`. En el menú no se usa el `v-tooltip` de PrimeVue: lo borra cada vez que el menú se repinta |
 
 La app ya no define estos estilos en su `custom.scss` ni en su `menu.vue`.
 
@@ -141,6 +145,10 @@ La app ya no define estos estilos en su `custom.scss` ni en su `menu.vue`.
 
 - `moduleColor(slug)`: color de identidad de cada módulo; el mismo en todas las apps.
 - `useDismiss(ancla, cerrar)`: cierra un menú al hacer clic fuera o presionar Escape.
+- `holdDomaLayout()` / `releaseDomaLayout()` y `DOMA_LAYOUT_ATTR`: ponen y quitan el atributo
+  del layout. Al cambiar de módulo, Inertia monta el layout nuevo antes de desmontar el anterior;
+  el atributo solo se quita cuando ya no queda ninguno montado. Si se quitara en ese cambio, la
+  barra nueva arrancaría en la posición de la plantilla y se deslizaría a su lugar.
 
 ### Tokens
 
