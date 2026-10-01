@@ -12,11 +12,15 @@ necesita alguna acción manual.
   celular y contenido sin footer. **Acción en la app:** marcar `<html>` con `data-doma-layout`
   (en vez de su atributo propio), el menú con `doma-app-menu` y el botón con
   `doma-sidebar-toggle`, y quitar ese bloque de su `custom.scss`.
-- Ítems del menú lateral (`styles/menu.css`): tamaños, espacios y estados; panel flotante
-  (`doma-menu-flyout`) y tooltip (`doma-menu-tooltip`) del menú colapsado. **Acción en la app:**
-  quitar esos estilos de su `menu.vue` y de su `custom.scss`, y usar las clases `doma-menu-*`.
-  El tooltip de los ítems sin sub-ítems va con `doma-menu-tooltip` también en las apps con
-  PrimeVue, en lugar de `v-tooltip`.
+- Ítems del menú lateral (`styles/menu.css`): tamaños, espacios y estados, y panel flotante
+  (`doma-menu-flyout`) del menú colapsado. **Acción en la app:** quitar esos estilos de su
+  `menu.vue` y de su `custom.scss`, y usar las clases `doma-menu-*`.
+- Directiva `v-doma-tooltip`: tooltip que se pinta en `<body>`, a cualquier lado, sin PrimeVue ni
+  Bootstrap, y que no se borra al repintar el elemento. **Acción en la app:** usarla en los ítems
+  sin sub-ítems del menú colapsado (`v-doma-tooltip:right`), en lugar del `v-tooltip` de PrimeVue
+  o de un tooltip propio.
+- El tooltip de Bootstrap (`v-b-tooltip`) toma el aspecto de los tooltips de DOMA, como ya lo
+  hacía el de PrimeVue.
 - Token `--doma-on-primary`: texto sobre el primario, tomado del blanco del tema.
 - Token `--doma-layout-border`: color de las líneas del layout.
 - `holdDomaLayout()`, `releaseDomaLayout()` y `DOMA_LAYOUT_ATTR`: mantienen el atributo del
@@ -34,6 +38,14 @@ necesita alguna acción manual.
 - Radio del tema en los ítems del menú lateral y en su panel flotante.
 - El botón del usuario (el que abre su menú y el cierre de sesión) ya no marca borde al pasar el
   mouse.
+- Los tooltips de DOMA salen con el mismo retardo, 0,15 s (antes, 0,3 s los de la barra y sin
+  retardo los del menú), y la misma entrada.
+- El repositorio pasa a llamarse `package-doma-frontend` (`Sodeker-SAS/package-doma-frontend`), el
+  estándar de nombres de los repositorios de paquetes. El paquete de Composer sigue siendo
+  `sodeker/doma-frontend`. **Acción en la app:** apuntar el repositorio `vcs` de su
+  `composer.json` a la URL nueva, y la carpeta local `../doma-frontend` a
+  `../package-doma-frontend` en `vite.config.js`, `docker-compose.yml` (servicio `node`) y
+  `jsconfig.json`.
 - Lanzador: muestra a lo sumo 3×3 productos, siempre del mismo tamaño; si hay más, aparece
   "Ver más productos", que lleva al hub (`homeUrl`). Inicio y Configuración se reparten el ancho
   del pie, una mitad cada uno, con una línea divisoria en medio.
@@ -48,8 +60,8 @@ necesita alguna acción manual.
   su ancho.
 
 - El tooltip del menú colapsado ya no parpadea ni desaparece al pasar de una opción con
-  sub-ítems a una sin ellos (pasaba en las apps que usaban el `v-tooltip` de PrimeVue: al
-  cerrarse el panel flotante el menú se repinta y la directiva borraba el tooltip).
+  sub-ítems a una sin ellos (pasaba con el `v-tooltip` de PrimeVue: al cerrarse el panel
+  flotante el menú se repinta y la directiva borraba el tooltip).
 
 ### Eliminado
 
