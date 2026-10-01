@@ -468,13 +468,14 @@ function logout() {
     transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
+/* El botón del usuario no marca borde ni al pasar el mouse: solo el anillo de
+   foco con teclado. */
 .doma-navbar__user {
     border-color: transparent;
     background: transparent;
 }
 
-.doma-navbar__chip:hover:not(.is-static),
-.doma-navbar__user:hover {
+.doma-navbar__chip:hover:not(.is-static) {
     border-color: var(--doma-primary-border);
 }
 
