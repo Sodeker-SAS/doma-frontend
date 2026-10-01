@@ -1,10 +1,22 @@
 /*
- * Tooltip de DOMA, sin JavaScript ni dependencias: cualquier elemento con
- * `data-doma-tooltip="Texto"` lo muestra debajo al pasar el mouse o al llegar
- * con el teclado. Reemplaza al `title` del navegador, que tarda en salir y no
- * sigue el tema. Fondo del color primario de la app y texto blanco.
+ * Tooltips de DOMA. Todos se ven igual, en todas las apps: fondo del primario
+ * de la app, su texto, el radio del tema y sin sombra.
  *
- * No se muestra mientras el elemento tiene su menú abierto (aria-expanded).
+ * - `data-doma-tooltip="Texto"`: sin JavaScript, debajo del elemento. Para
+ *   elementos que nada recorta, como los de la barra.
+ * - `v-doma-tooltip` (directives/domaTooltip.js): se pinta en <body>, a
+ *   cualquier lado. Para elementos dentro de un contenedor que recorta, como
+ *   el menú lateral.
+ * - Los de PrimeVue (`v-tooltip`) y Bootstrap (`v-b-tooltip`) que ya usan las
+ *   páginas de cada app toman el mismo aspecto.
+ */
+
+/* ---------- data-doma-tooltip ---------- */
+
+/*
+ * Lo muestra debajo al pasar el mouse o al llegar con el teclado. Reemplaza al
+ * `title` del navegador, que tarda en salir y no sigue el tema. No se muestra
+ * mientras el elemento tiene su menú abierto (aria-expanded).
  */
 [data-doma-tooltip] {
     position: relative;
@@ -53,7 +65,8 @@
     opacity: 1;
     visibility: visible;
     transform: translate(-50%, 0);
-    transition-delay: 0.3s;
+    /* El mismo retardo de v-doma-tooltip (SHOW_DELAY en domaTooltip.js). */
+    transition-delay: 0.15s;
 }
 
 [data-doma-tooltip][aria-expanded='true']::before,
@@ -68,10 +81,97 @@
     }
 }
 
+/* ---------- v-doma-tooltip ---------- */
+
+.doma-tooltip {
+    position: fixed;
+    z-index: 1100;
+    max-width: 280px;
+    padding: 4px 8px;
+    border-radius: var(--doma-radius);
+    background: var(--doma-tooltip-bg);
+    color: var(--doma-tooltip-text);
+    font-family: var(--doma-font);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.4;
+    pointer-events: none;
+    /* La misma entrada de data-doma-tooltip: 0,15 s, acercándose desde el
+       elemento. */
+    animation: domaTooltipIn 0.15s ease;
+}
+
+.doma-tooltip--top {
+    --doma-tooltip-from: translateY(4px);
+}
+
+.doma-tooltip--right {
+    --doma-tooltip-from: translateX(-4px);
+}
+
+.doma-tooltip--bottom {
+    --doma-tooltip-from: translateY(-4px);
+}
+
+.doma-tooltip--left {
+    --doma-tooltip-from: translateX(4px);
+}
+
+@keyframes domaTooltipIn {
+    from {
+        opacity: 0;
+        transform: var(--doma-tooltip-from, none);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* Flecha hacia el elemento. */
+.doma-tooltip::before {
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 1px;
+    background: var(--doma-tooltip-bg);
+}
+
+.doma-tooltip--right::before,
+.doma-tooltip--left::before {
+    top: 50%;
+    transform: translateY(-50%) rotate(45deg);
+}
+
+.doma-tooltip--right::before {
+    left: -4px;
+}
+
+.doma-tooltip--left::before {
+    right: -4px;
+}
+
+.doma-tooltip--top::before,
+.doma-tooltip--bottom::before {
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+}
+
+.doma-tooltip--top::before {
+    bottom: -4px;
+}
+
+.doma-tooltip--bottom::before {
+    top: -4px;
+}
+
+/* ---------- PrimeVue y Bootstrap ---------- */
+
 /*
- * Tooltip de PrimeVue (`v-tooltip`), en las apps que lo usan: el mismo aspecto
- * que el de arriba, para que todos los tooltips de DOMA se vean iguales. Se
- * sobreescriben las variables con las que PrimeVue lo pinta.
+ * Tooltip de PrimeVue (`v-tooltip`), en las apps que lo usan: se sobreescriben
+ * las variables con las que PrimeVue lo pinta.
  */
 .p-tooltip {
     --p-tooltip-background: var(--doma-tooltip-bg);
@@ -86,4 +186,19 @@
     font-size: 12px;
     font-weight: 400;
     line-height: 1.4;
+}
+
+/*
+ * Tooltip de Bootstrap (`v-b-tooltip` de bootstrap-vue-next), el que usan las
+ * páginas de Iris y SAT: se sobreescriben las variables de Bootstrap. La
+ * plantilla lo pinta casi negro y semitransparente.
+ */
+.tooltip {
+    --vz-tooltip-bg: var(--doma-tooltip-bg);
+    --vz-tooltip-color: var(--doma-tooltip-text);
+    --vz-tooltip-padding-x: 8px;
+    --vz-tooltip-padding-y: 4px;
+    --vz-tooltip-border-radius: var(--doma-radius);
+    --vz-tooltip-font-size: 12px;
+    --vz-tooltip-opacity: 1;
 }

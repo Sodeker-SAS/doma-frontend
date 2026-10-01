@@ -2,10 +2,13 @@
  * Tokens del rediseño DOMA como variables CSS. Prefijo --doma- para no chocar
  * con Bootstrap (--bs-) ni con PrimeVue (--p-).
  *
- * Por ahora cada token toma el valor del tema de la app que consume el paquete
- * (las variables --vz-* de Velzon, que usan Suite y las apps hijas), con un
- * valor de respaldo si la app no las define. Así el paquete respeta los colores
- * y el modo oscuro de cada app; cuando los colores se dinamicen, se cambia aquí.
+ * Cada token toma el valor del tema de la app que consume el paquete (las
+ * variables --vz-* de Velzon, que usan Suite y las apps hijas). El valor de
+ * respaldo, el de Suite, solo aplica si la app no define la variable. Así el
+ * paquete respeta el primario, la paleta y el modo oscuro de cada app.
+ *
+ * Regla del paquete: ningún color fijo en los estilos. Todo color sale de estos
+ * tokens o de una variable --vz-* del tema, con el valor de Suite de respaldo.
  */
 :root {
     --doma-primary: var(--vz-primary, #25a0e2);
@@ -17,6 +20,10 @@
     --doma-surface: var(--vz-secondary-bg, #fff);
     --doma-surface-muted: var(--vz-light, #f3f6f9);
     --doma-border: var(--vz-border-color, #e9ebec);
+    /* Líneas del layout: bajo la barra, el borde del menú lateral y el
+       separador de la marca. El borde del menú del tema de la app, para que
+       todas se vean iguales. */
+    --doma-layout-border: var(--vz-vertical-menu-border, var(--doma-border));
 
     --doma-heading: var(--vz-heading-color, #495057);
     --doma-text: var(--vz-body-color, #212529);
@@ -24,12 +31,16 @@
 
     --doma-danger: var(--vz-danger, #f06548);
 
-    /* Tooltip: el color primario de la app, con texto blanco, en ambos temas. */
-    --doma-tooltip-bg: var(--vz-primary, #25a0e2);
-    --doma-tooltip-text: #fff;
+    /* Texto sobre el primario (ítem activo del menú, avatar, tooltip). */
+    --doma-on-primary: var(--vz-white, #fff);
 
-    --doma-shadow: var(--vz-box-shadow, 0 1px 2px rgba(56, 65, 74, 0.15));
-    --doma-shadow-menu: 0 12px 32px -12px rgba(15, 23, 42, 0.25);
+    /* Tooltip: el color primario de la app, con su texto, en ambos temas. */
+    --doma-tooltip-bg: var(--doma-primary);
+    --doma-tooltip-text: var(--doma-on-primary);
+
+    /* Solo las capas flotantes (menús desplegables) llevan sombra; la barra y
+       el menú lateral van planos. */
+    --doma-shadow-menu: var(--vz-box-shadow-lg, 0 5px 10px rgba(30, 32, 37, 0.12));
 
     --doma-radius: var(--vz-border-radius, 0.25rem);
     --doma-radius-lg: var(--vz-border-radius-lg, 0.3rem);
