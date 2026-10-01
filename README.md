@@ -195,9 +195,10 @@ En modo local cada archivo que se guarda en `doma-frontend` llega al navegador p
 que un archivo de la propia app: **sin commit, sin tag y sin tocar Composer**. En el servidor
 `../package-doma-frontend` no existe y se usa la copia de `vendor/` sin cambiar nada.
 
-No se usa un *path repository* de Composer (como en `doma-composer`) porque quien consume el
-paquete es Vite, no PHP: así el `composer.json` y el `composer.lock` de la app no cambian
-durante el desarrollo y no hay un lock apuntando a una carpeta local que rompa un despliegue.
+No se usa un *path repository* de Composer (como en `package-laravel-attachements`) porque
+quien consume el paquete es Vite, no PHP: así el `composer.json` y el `composer.lock` de la app
+no cambian durante el desarrollo y no hay un lock apuntando a una carpeta local que rompa un
+despliegue.
 
 ### Conectar una aplicación (una sola vez)
 
