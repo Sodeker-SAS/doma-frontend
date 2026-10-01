@@ -63,11 +63,17 @@ useDismiss(() => (openMenu.value ? anchors[openMenu.value].value : null), closeM
 
 const canSwitchTenant = computed(() => props.tenantSwitchable && props.tenants.length > 1);
 
-const launcherModules = computed(() => props.modules.map((module) => ({
+// El lanzador muestra a lo sumo 3×3 productos; si hay más, "Ver más productos"
+// lleva al hub, donde están todos.
+const LAUNCHER_LIMIT = 9;
+
+const launcherModules = computed(() => props.modules.slice(0, LAUNCHER_LIMIT).map((module) => ({
     ...module,
     color: module.color || moduleColor(module.slug),
     href: module.accessible !== false ? module.url || null : null,
 })));
+
+const hasMoreModules = computed(() => props.modules.length > LAUNCHER_LIMIT && Boolean(props.homeUrl));
 
 function initials(text) {
     return String(text ?? '')
@@ -186,6 +192,11 @@ function logout() {
                                 <i v-if="!module.href" class="ri-lock-line doma-navbar__module-lock" aria-hidden="true"></i>
                             </component>
                         </div>
+
+                        <a v-if="hasMoreModules" :href="homeUrl" class="doma-navbar__menu-more">
+                            Ver más productos
+                            <i class="ri-arrow-right-line" aria-hidden="true"></i>
+                        </a>
 
                         <div v-if="homeUrl || configUrl" class="doma-navbar__menu-footer">
                             <a v-if="homeUrl" :href="homeUrl" class="doma-navbar__menu-link">
@@ -333,9 +344,8 @@ function logout() {
     gap: 12px;
     height: var(--doma-navbar-height);
     padding: 0 20px;
-    border-bottom: 1px solid var(--doma-border);
+    border-bottom: 1px solid var(--doma-layout-border);
     background: var(--doma-surface);
-    box-shadow: var(--doma-shadow);
     color: var(--doma-text);
     font-family: var(--doma-font);
     font-size: 14px;
@@ -379,7 +389,7 @@ function logout() {
     margin-left: -20px;
     margin-right: 6px;
     padding: 0 16px 0 20px;
-    border-right: 1px solid var(--doma-border);
+    border-right: 1px solid var(--doma-layout-border);
 }
 
 .doma-navbar__brand {
@@ -403,7 +413,7 @@ function logout() {
     height: 30px;
     border-radius: var(--doma-radius);
     background: var(--doma-primary);
-    color: #fff;
+    color: var(--doma-on-primary);
     font-size: 14px;
     font-weight: 600;
 }
@@ -469,13 +479,14 @@ function logout() {
     transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
+/* El botón del usuario no marca borde ni al pasar el mouse: solo el anillo de
+   foco con teclado. */
 .doma-navbar__user {
     border-color: transparent;
     background: transparent;
 }
 
-.doma-navbar__chip:hover:not(.is-static),
-.doma-navbar__user:hover {
+.doma-navbar__chip:hover:not(.is-static) {
     border-color: var(--doma-primary-border);
 }
 
@@ -557,7 +568,7 @@ function logout() {
     height: 34px;
     border-radius: 50%;
     background: var(--doma-primary);
-    color: #fff;
+    color: var(--doma-on-primary);
 }
 
 .doma-navbar__divider {
@@ -689,15 +700,18 @@ function logout() {
     width: 380px;
 }
 
+/* Siempre 3×3 del mismo tamaño: las filas se igualan a la más alta y, con
+   menos de nueve productos, las que sobran conservan su alto. */
 .doma-navbar__modules {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-rows: repeat(3, 1fr);
     gap: 4px;
     padding: 4px;
 }
 
 .doma-navbar__module {
-    --module-ink: color-mix(in srgb, var(--module) 80%, #000);
+    --module-ink: color-mix(in srgb, var(--module) 80%, var(--vz-black, #000));
 
     position: relative;
     display: flex;
@@ -760,27 +774,70 @@ a.doma-navbar__module:hover {
     font-size: 12px;
 }
 
-.doma-navbar__menu-footer {
+/* Más productos de los que caben: lleva al hub, donde están todos. */
+.doma-navbar__menu-more {
     display: flex;
     align-items: center;
-    justify-content: space-around;
-    gap: 12px;
+    justify-content: center;
+    gap: 6px;
+    margin: 0 4px 4px;
+    padding: 8px;
+    border-radius: var(--doma-radius);
+    color: var(--doma-primary);
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color 0.15s ease;
+}
+
+.doma-navbar__menu-more i {
+    font-size: 16px;
+}
+
+.doma-navbar__menu-more:hover {
+    background: var(--doma-primary-soft);
+    color: var(--doma-primary);
+}
+
+/* Inicio y Configuración se reparten el ancho, cada uno con su mitad, con una
+   línea divisoria en medio. */
+.doma-navbar__menu-footer {
+    display: grid;
+    grid-auto-columns: minmax(0, 1fr);
+    grid-auto-flow: column;
+    gap: 9px;
     margin-top: 4px;
     padding: 6px 4px 2px;
     border-top: 1px solid var(--doma-border);
 }
 
 .doma-navbar__menu-link {
-    display: inline-flex;
+    display: flex;
     align-items: center;
+    justify-content: center;
     gap: 7px;
-    padding: 6px 8px;
+    padding: 8px;
     border-radius: var(--doma-radius);
     color: var(--doma-heading);
     font-size: 13px;
     font-weight: 500;
     text-decoration: none;
     transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+/* La línea va en el espacio entre los dos, fuera del fondo del hover. */
+.doma-navbar__menu-link + .doma-navbar__menu-link {
+    position: relative;
+}
+
+.doma-navbar__menu-link + .doma-navbar__menu-link::before {
+    content: '';
+    position: absolute;
+    top: 6px;
+    bottom: 6px;
+    left: -5px;
+    width: 1px;
+    background: var(--doma-border);
 }
 
 .doma-navbar__menu-link i {
@@ -799,7 +856,7 @@ a.doma-navbar__module:hover {
 }
 
 [data-bs-theme="dark"] .doma-navbar__module {
-    --module-ink: color-mix(in srgb, var(--module) 70%, #fff);
+    --module-ink: color-mix(in srgb, var(--module) 70%, var(--vz-white, #fff));
 }
 
 /* ---------- Pantallas angostas ---------- */
