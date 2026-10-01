@@ -12,11 +12,12 @@ resources/
 ├── index.js          punto de entrada público: import { … } from '@doma'
 ├── components/       componentes Vue (SFC con <script setup>)
 ├── composables/      lógica reutilizable (useAlgo)
+├── directives/       directivas de Vue (v-doma-tooltip)
 ├── utils/            funciones sueltas (moduleColor, holdDomaLayout)
 └── styles/
     ├── doma.css      estilos globales; la app lo importa una sola vez
     ├── tokens.css    variables CSS --doma-* (color, tipografía, espaciado…)
-    ├── tooltip.css   tooltip data-doma-tooltip y el de PrimeVue
+    ├── tooltip.css   tooltips de DOMA y el aspecto de los de PrimeVue y Bootstrap
     ├── layout.css    barra a todo el ancho y menú lateral sobre la plantilla Velzon
     └── menu.css      ítems del menú lateral, su panel flotante y su tooltip
 vite.js               plugin de Vite que conecta el paquete con la app
@@ -99,14 +100,35 @@ Encabezado del menú lateral: dónde está parado el usuario, sobre fondo gris. 
 
 ### Tooltip
 
-`styles/tooltip.css` (incluido en `doma.css`): cualquier elemento con
-`data-doma-tooltip="Texto"` muestra un tooltip debajo al pasar el mouse o al enfocarlo con el
-teclado. No usa JavaScript ni PrimeVue (no todas las apps lo tienen); el fondo es el color
-primario de la app y el texto, el blanco de su tema. Va en lugar del `title` del navegador.
+Todos los tooltips se ven igual en todas las apps: fondo del primario de la app, su texto, el
+radio del tema y sin sombra (`styles/tooltip.css`, incluido en `doma.css`). Los dos de DOMA
+salen igual: 0,15 s después de llegar al elemento, con una entrada de 0,15 s. Los colores salen de
+`--doma-tooltip-bg` y `--doma-tooltip-text`; la app no los pinta por su cuenta.
 
-El mismo archivo le da ese aspecto al tooltip de PrimeVue (`v-tooltip`) en las apps que lo usan,
-así todos los tooltips de DOMA se ven iguales. La app no debe pintar `.p-tooltip-text` por su
-cuenta; los colores salen de `--doma-tooltip-bg` y `--doma-tooltip-text`.
+El paquete trae dos, que no dependen de PrimeVue ni de Bootstrap (no todas las apps los tienen):
+
+- `data-doma-tooltip="Texto"`: sin JavaScript, debajo del elemento, al pasar el mouse o al
+  enfocarlo con el teclado. Para elementos que nada recorta, como los de la barra.
+- `v-doma-tooltip`: directiva que pinta el tooltip en `<body>`, a cualquier lado, así ningún
+  contenedor lo recorta. Para elementos dentro de algo con scroll u `overflow`, como el menú
+  lateral. Un texto vacío no muestra nada, y repintar el elemento no lo borra.
+
+  ```js
+  import { vDomaTooltip } from '@doma';   // en <script setup> queda registrada sola
+  directives: { domaTooltip: vDomaTooltip }, // en la Options API
+  ```
+
+  ```vue
+  <a v-doma-tooltip:right="'Reportes'">…</a>
+  <a v-doma-tooltip:right="menuColapsado ? 'Reportes' : ''">…</a>
+  ```
+
+  El argumento es el lado: `top` (por defecto), `right`, `bottom` o `left`.
+
+Los tooltips que ya usan las páginas de cada app toman el mismo aspecto: el de PrimeVue
+(`v-tooltip`, Suite y SAT) y el de Bootstrap (`v-b-tooltip` de bootstrap-vue-next, Iris y SAT).
+En el rediseño se usan los de DOMA: el `v-tooltip` de PrimeVue borra el tooltip visible cada vez
+que el componente se repinta.
 
 ### Layout y menú lateral
 
@@ -137,7 +159,7 @@ flotante); el aspecto y la mecánica del layout vienen del paquete:
 | `<div class="app-menu navbar-menu doma-app-menu">` | El menú lateral; `DomaMenuHeader` va como primer hijo |
 | `<button class="doma-sidebar-toggle">` | Botón de colapsar el menú |
 | `.doma-menu-flyout`, `-title`, `-list`, `-link` | Panel flotante del menú colapsado, teletransportado a `<body>` |
-| `.doma-menu-tooltip` | Tooltip del menú colapsado, teletransportado a `<body>`. En el menú no se usa el `v-tooltip` de PrimeVue: lo borra cada vez que el menú se repinta |
+| `v-doma-tooltip:right` en los ítems sin sub-ítems | Su nombre con el menú colapsado; con el menú expandido, texto vacío |
 
 La app ya no define estos estilos en su `custom.scss` ni en su `menu.vue`.
 
