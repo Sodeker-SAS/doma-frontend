@@ -25,9 +25,16 @@
    desplegables de la barra queden encima. La línea inferior la pone la barra
    (DomaNavBar); la de la plantilla se quita para que no queden dos. Sin la
    transición de la plantilla, que la desplaza con el menú: aquí nunca se
-   mueve. */
+   mueve.
+
+   Mide siempre el ancho de la ventana (100vw), con o sin barra de scroll: si
+   la página la gana o la pierde (al cambiar de módulo, mientras la nueva
+   carga sus datos, o al abrir un modal), lo de la derecha de la barra no
+   salta. La barra de scroll se pinta encima de su borde derecho. */
 [data-doma-layout] #page-topbar {
+    right: auto;
     left: 0 !important;
+    width: 100vw;
     z-index: 1023;
     border-bottom: 0;
     background: transparent;
